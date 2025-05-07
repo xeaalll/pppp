@@ -1,0 +1,1220 @@
+
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+
+<style>
+  body {
+    background: linear-gradient(to right, #74ebd5, #acb6e5); /* Biru polos */
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .card, .container, .result-box {
+    background-color: #ffffff; /* Putih */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 40px auto;
+  }
+
+  h1, h2, p {
+    color: #000000;
+  }
+</style>
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cek Kelulusan Siswa</title>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('Desain tanpa judul.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px;
+        }
+        h2 {
+            color: #333;
+    text-align: center;
+    line-height: 1.4;
+    text-transform: uppercase;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            white-space: pre-line;
+        }
+        #status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .lulus {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        .tidak-lulus {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        #emojiSad {
+            font-size: 80px;
+            display: none;
+            animation: tears 1s infinite;
+            margin-top: 20px;
+        }
+        @keyframes tears {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(10px); opacity: 0.5; }
+        }
+    
+body { font-size: 18px; }</style>
+</head>
+<body>
+<div style="position: absolute; top: 20px; left: 20px;">
+
+</div>
+<div style="position: absolute; top: 20px; right: 20px;">
+<img alt="Logo Kanan" src="39c854be-2fd8-47af-a3fb-f6f2bb5d05d8.png" style="height: 80px;"/>
+</div>
+<h2>CEK STATUS KELULUSAN<br>SMA XAVERIUS 3 PALEMBANG</h2>
+<input id="nisnInput" placeholder="Masukkan NISN" type="text"/>
+<button onclick="cekKelulusan()">Cek Status</button>
+<div id="status"></div>
+<div id="emojiSad">😢</div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+        const dataSiswa = [
+    {
+        "nisn": "0072162010",
+        "nama": "Amelia",
+        "kelas": "XII 1",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0075974840",
+        "nama": "Andre Saputra",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0081345779",
+        "nama": "Chanine Filadelfia Sainlar Lololuan",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076524180",
+        "nama": "David Ferdinan",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077111130",
+        "nama": "Denice Davincent Lie",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078041249",
+        "nama": "Erika Nainggolan",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071046317",
+        "nama": "Evan Karuna",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075582008",
+        "nama": "Excel Aurelio",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075400185",
+        "nama": "Febrianto",
+        "kelas": "XII 1",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0078929178",
+        "nama": "Fhabian Rafael",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076598120",
+        "nama": "Finnan The",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078131278",
+        "nama": "Gracellin",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0061982252",
+        "nama": "Gracia Adeluwina BR Perangin-Angin",
+        "kelas": "XII 1",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0071281623",
+        "nama": "Jason Ricardo Jasin",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079538777",
+        "nama": "Jonathan Stanley",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071280487",
+        "nama": "Josh Rafael Makmun",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075506330",
+        "nama": "Leonardo Cristopher",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078402502",
+        "nama": "Lionel Lucky Aurelio",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072532538",
+        "nama": "Marcellina Oktavia",
+        "kelas": "XII 1",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0076010597",
+        "nama": "Marselinus Karnael Saputra",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0069792949",
+        "nama": "Maura Sheara Salsabillah",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075851740",
+        "nama": "Maxmillian Darren",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071588503",
+        "nama": "Nadisa",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075094971",
+        "nama": "Nathanael Bening Pratisthantara W.",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076895852",
+        "nama": "Nicky Brahm",
+        "kelas": "XII 1",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0076698323",
+        "nama": "Oktavius Alvine",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078638573",
+        "nama": "Ryan Surya",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071991302",
+        "nama": "Stecia Cia",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077247347",
+        "nama": "Stellanery",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076687362",
+        "nama": "Steven Revaldo",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074390756",
+        "nama": "Vanessa Gabrielle Tangkoil",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076278788",
+        "nama": "Vincent Vernando Ekklesia",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0081865118",
+        "nama": "Vivian Tamin",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071381725",
+        "nama": "Yulius Chandra",
+        "kelas": "XII 1",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072470837",
+        "nama": "Aditya Aji Nugraha",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077687263",
+        "nama": "Agnesia Cahyani Ayudya Pranata",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072203729",
+        "nama": "Alvin Tjauw",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076624462",
+        "nama": "Angela Zanetha Yoshe Hasibuan",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079491821",
+        "nama": "Chelsea",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078766580",
+        "nama": "Chicco Tan",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0084119601",
+        "nama": "Christella Elfira",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072234133",
+        "nama": "Christian Karmel Aurelius Sinaga",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079601308",
+        "nama": "Dian Sius Wijaya",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074511849",
+        "nama": "Eustakia Thetania Christy",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079730650",
+        "nama": "Fernando Agustinus",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079917376",
+        "nama": "Franciscus Rafaell",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076932357",
+        "nama": "Glenn Bodhiyanto Chandra",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078527074",
+        "nama": "Indica Oriza BR. Hutabarat",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076259162",
+        "nama": "Jiry Sorensen",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072377206",
+        "nama": "Joseph Evan Sadikin",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072361290",
+        "nama": "Kalisia Celesta",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071930622",
+        "nama": "Keyzia Chatrine",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075821011",
+        "nama": "Koresh Imanuel Harahap",
+        "kelas": "XII 2",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0078793066",
+        "nama": "Meyta Devina Azzahra",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072081594",
+        "nama": "Revaldo Delvino",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074880291",
+        "nama": "Samuel Andre Hutabarat",
+        "kelas": "XII 2",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0075969242",
+        "nama": "Stanley Lawrent Antonius",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071599841",
+        "nama": "Steven Chandani Wijaya",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075258513",
+        "nama": "Weshly Warsono",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0087590435",
+        "nama": "Wisha Setiawan",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071929194",
+        "nama": "Yowan Alia Dwi Lestari",
+        "kelas": "XII 2",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072478757",
+        "nama": "Angelika",
+        "kelas": "XII 2",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0075122423",
+        "nama": "Adriliansyah Pratama",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078976505",
+        "nama": "Alfonsus Samuel Munte",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075098422",
+        "nama": "Andrea Putra Bagaskara",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0134659036",
+        "nama": "Angelica Annabel Andrine Kuncoro",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075940829",
+        "nama": "Chelsea Claresta Lie",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077077141",
+        "nama": "Christopher Tjandra",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079778509",
+        "nama": "Clarissa Christy Ann",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078468680",
+        "nama": "Edrick Giovanno Marton",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078269979",
+        "nama": "Felix Jonathan",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073064199",
+        "nama": "Fernando Glencia",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073609070",
+        "nama": "Grace Thabita Sitompul",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079973847",
+        "nama": "Irfan Candra",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073339014",
+        "nama": "Jessica Juniar Johan",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077417215",
+        "nama": "Jetrine Moza Gunawan",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073113309",
+        "nama": "Kevin Adrian",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073867222",
+        "nama": "Kezia Aprilia Salim",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076111764",
+        "nama": "Leon Nathanael",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076623896",
+        "nama": "Marcella Reginally",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0086678670",
+        "nama": "Mellyani Angelica",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074082622",
+        "nama": "Michella Verlita",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076045151",
+        "nama": "Rizki Kusuma",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0081643963",
+        "nama": "Sandi",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078525859",
+        "nama": "Sandra Patricia Sihombing",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074102767",
+        "nama": "Stevanny Iwan",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074062345",
+        "nama": "Steven Putra Kosim",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072111804",
+        "nama": "Vallery Aurelia Dharmawan",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073529730",
+        "nama": "William Harison JR",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074972855",
+        "nama": "Yohani Destria",
+        "kelas": "XII 3",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0071710056",
+        "nama": "Gwen Edma",
+        "kelas": "XII 3",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078390287",
+        "nama": "Angelica Evelin Violita Nahas",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077551869",
+        "nama": "Cinta Aisyah Nur Rahmadita",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074785116",
+        "nama": "Cristian Jonathan",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077731938",
+        "nama": "Deprian Wiranata Wijaya",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079707689",
+        "nama": "Dhevid Jonathan",
+        "kelas": "XII 4",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0072020799",
+        "nama": "Elsa Mazaya",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076736020",
+        "nama": "Gabriel Possenti Rizla Adventus",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074167964",
+        "nama": "Ignatia Gratias Cahyaning Cryste",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071233981",
+        "nama": "Intan",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071562081",
+        "nama": "Jason Adiasa Putra",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0044677215",
+        "nama": "Jason Viandy",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071242598",
+        "nama": "Jefrry Saputra",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0084699792",
+        "nama": "Jerry C",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077347127",
+        "nama": "Jhonathan Fharel Halim",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076854813",
+        "nama": "Jonathan Chen",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0089546527",
+        "nama": "Karen Valarie Dealova",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075785134",
+        "nama": "M. Chico Aurelio",
+        "kelas": "XII 4",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0072881841",
+        "nama": "Maria Sani",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078017473",
+        "nama": "Marshelly",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074605440",
+        "nama": "Osefva Malenda Ayundarri",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076968806",
+        "nama": "Princessa Aurora Titaley",
+        "kelas": "XII 4",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0075268896",
+        "nama": "Viorin Margaretha",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074135666",
+        "nama": "Freya Ghovita",
+        "kelas": "XII 4",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078252815",
+        "nama": "Azriel Andino Kristiyanto",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076160077",
+        "nama": "Callista Rivera",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079713687",
+        "nama": "Chessya Graciella",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074970073",
+        "nama": "Chyerlin Aulia",
+        "kelas": "XII 5",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0074889876",
+        "nama": "Felicia Christy",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072813729",
+        "nama": "Hilarius William Notoprojo",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073787079",
+        "nama": "Junian",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077810656",
+        "nama": "Levina Charlie",
+        "kelas": "XII 5",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0075543403",
+        "nama": "Livio Nathaniel",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078723671",
+        "nama": "M. Candra Wijaya",
+        "kelas": "XII 5",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0063398604",
+        "nama": "Malvin Saputra Effendi",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079080091",
+        "nama": "Marcellin Suardi",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078872733",
+        "nama": "Maria Evangelina",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075844907",
+        "nama": "Nathania Venarya Andika",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071633583",
+        "nama": "Nathaniel Thomas Sutoyo",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071064250",
+        "nama": "Nichi Qsyah Lovery",
+        "kelas": "XII 5",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0062149249",
+        "nama": "Nicholas Alamsyah",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077940679",
+        "nama": "Olivia",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075313165",
+        "nama": "Patricia Putri Nathalie Manurung",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079960619",
+        "nama": "Pricillia Joseph Sen",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073162701",
+        "nama": "Putra Sanjaya Joery",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076265252",
+        "nama": "Yehuda Ezra Latuputty",
+        "kelas": "XII 5",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0082334527",
+        "nama": "Calista Aurelia",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071559159",
+        "nama": "Claudia Fernando",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079415163",
+        "nama": "Deva Khayyirah Aini",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0077326975",
+        "nama": "Farel Amsal Valentino Purba",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0088016180",
+        "nama": "Handi Wijaya",
+        "kelas": "XII 6",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0083420253",
+        "nama": "Jesica Anastasia",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0089264764",
+        "nama": "Keisha Angeline",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079298855",
+        "nama": "Marsha Bella Joli",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073692798",
+        "nama": "Martin Susanto",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074973256",
+        "nama": "Rafael Emilio Christian",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076362640",
+        "nama": "Reivaldo Setiawan",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076874594",
+        "nama": "Ryan Marchell",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074554114",
+        "nama": "Samuel Christofer Johny",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076424815",
+        "nama": "Sisilia",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073007999",
+        "nama": "Steven Agustinus",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071668927",
+        "nama": "Theodorus Farrell Danurwenda",
+        "kelas": "XII 6",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0076898040",
+        "nama": "Valencia Andiend Natalin",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0071259829",
+        "nama": "Vicencia Candella",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072461116",
+        "nama": "Vijja Nanda Sari Putra Taslim",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072609683",
+        "nama": "Viona Huang",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0081443929",
+        "nama": "Visakha Vimalaputri Salim",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075928827",
+        "nama": "Miichael Ferdinand Agga",
+        "kelas": "XII 6",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0061833956",
+        "nama": "Agnes Elycia Natalie",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075196499",
+        "nama": "Brandon Fransisco Alvaro",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072233460",
+        "nama": "Christian Lie",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078352987",
+        "nama": "Creszentia Shine Margaretha Adelaide Sinaga",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074461783",
+        "nama": "Felix Karuna Dwi Derisa",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075952439",
+        "nama": "Jose Mourinho",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0068891629",
+        "nama": "Justin Felix Fandentra",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072960892",
+        "nama": "Lidwina Erica Beatrice",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074702484",
+        "nama": "Louis Fikri",
+        "kelas": "XII 7",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0071637933",
+        "nama": "Melissa Erina Setyawan",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073704878",
+        "nama": "Melvine Natasya Salim",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078731242",
+        "nama": "Nikello Octovus",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0066668108",
+        "nama": "Nisy Abigael Siahaan",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0073191795",
+        "nama": "Noah Gabriel Raditya",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0079709021",
+        "nama": "Orellia Faustine Alamsyah",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074822655",
+        "nama": "Rachel Giovanni Lias",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0074556332",
+        "nama": "Richie Wang",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0062672575",
+        "nama": "Serli Kristiani",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0076802592",
+        "nama": "Steven Aldo Putra Yanto",
+        "kelas": "XII 7",
+        "status": "TIDAK LULUS"
+    },
+    {
+        "nisn": "0079737932",
+        "nama": "Tenzin Lokeshvara Sugata",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0075723015",
+        "nama": "Vessya Gabriella",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0072332786",
+        "nama": "Wynne Phylicia",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    },
+    {
+        "nisn": "0078991154",
+        "nama": "Yanty Oktavia",
+        "kelas": "XII 7",
+        "status": "LULUS"
+    }
+];
+
+        function cekKelulusan() {
+            const nisn = document.getElementById("nisnInput").value.trim();
+            const statusDiv = document.getElementById("status");
+            const emoji = document.getElementById("emojiSad");
+            const siswa = dataSiswa.find(s => s.nisn === nisn);
+
+            emoji.style.display = "none";
+
+            if (siswa) {
+                statusDiv.innerHTML = `Nama: ${siswa.nama}<br>Kelas: ${siswa.kelas}<br>Status: ${siswa.status}`;
+                statusDiv.className = siswa.status === "LULUS" ? "lulus show" : "tidak-lulus show";
+
+                if (siswa.status === "LULUS") {
+                    confetti({ origin: { x: 0, y: 0 }, angle: 60, spread: 100, particleCount: 150 });
+                    confetti({ origin: { x: 1, y: 0 }, angle: 120, spread: 100, particleCount: 150 });
+                } else {
+                    emoji.style.display = "block";
+                }
+            } else {
+                statusDiv.textContent = "NISN tidak ditemukan.";
+                statusDiv.className = "tidak-lulus show";
+            }
+        }
+    </script>
+</body>
+</html>
